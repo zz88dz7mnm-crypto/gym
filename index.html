@@ -183,13 +183,8 @@
     text-transform:uppercase;color:var(--grey);margin-top:5px}
 
   /* ---------- PIE ---------- */
-  footer{padding:34px 40px 44px}
-  .notes{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:18px}
-  .notes h4{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;
-    text-transform:uppercase;color:var(--red);margin-bottom:7px}
-  .notes p{font-size:12.5px;color:var(--ink-2);line-height:1.5}
-  .notes a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
-  .colophon{margin-top:26px;padding-top:18px;border-top:1px solid var(--line);
+  footer{padding:26px 40px 40px}
+  .colophon{margin-top:20px;
     font-family:'IBM Plex Mono',monospace;font-size:10px;
     letter-spacing:.16em;text-transform:uppercase;color:var(--grey);text-align:center}
   .colophon span+span::before{content:'·';margin:0 10px;color:var(--line-2)}
@@ -202,7 +197,6 @@
     .index a{border-right:none;border-bottom:1px solid var(--line)}
     .day-head{grid-template-columns:auto 1fr;gap:18px}
     .day-map{grid-column:1/-1;justify-content:flex-start}
-    .notes{grid-template-columns:1fr}
   }
 
   @media (max-width:640px){
@@ -238,11 +232,8 @@
     .sheet{box-shadow:none;min-height:100vh}
 
     /* Pie: bloques separados por reglas y colofón en dos líneas */
-    footer{padding:24px 22px 34px}
-    .notes{gap:0;margin-top:6px}
-    .notes>div{padding:16px 0;border-top:1px solid var(--line)}
-    .notes>div:first-child{border-top:none}
-    .colophon{margin-top:18px;padding-top:16px;letter-spacing:.1em;font-size:9.5px;line-height:1.9}
+    footer{padding:20px 22px 30px}
+    .colophon{margin-top:16px;letter-spacing:.1em;font-size:9.5px;line-height:1.9}
     .colophon span{display:block}
     .colophon span+span::before{content:none}
   }
@@ -284,22 +275,13 @@
 
   <main id="plan"></main>
 
+  <!--
+    Créditos: fotos de ejercicios de free-exercise-db (dominio público / Unlicense,
+    github.com/yuhonas/free-exercise-db) · láminas anatómicas del proyecto wger
+    (AGPL-3.0, github.com/wger-project/wger). Detalle completo en README.md.
+  -->
   <footer>
     <div class="rule thin"></div>
-    <div class="notes">
-      <div>
-        <h4>Cómo leer la ficha</h4>
-        <p><b>RIR</b> = repeticiones en reserva: cuántas te quedan antes del fallo. El número en rojo es series × repeticiones. Tocá la foto —o deslizá el dedo sobre ella— para ver la posición final del movimiento.</p>
-      </div>
-      <div>
-        <h4>Fotografías</h4>
-        <p>Ejecuciones reales de <a href="https://github.com/yuhonas/free-exercise-db">free-exercise-db</a> (dominio público / Unlicense), base de datos abierta de 870+ ejercicios.</p>
-      </div>
-      <div>
-        <h4>Láminas anatómicas</h4>
-        <p>Sistema muscular y superposiciones del proyecto libre <a href="https://github.com/wger-project/wger">wger</a> (AGPL-3.0). El músculo objetivo de cada ejercicio aparece resaltado en rojo.</p>
-      </div>
-    </div>
     <div class="colophon"><span>Plan PPL · 23 ejercicios · 3 sesiones semanales</span><span>RIR = repeticiones en reserva</span></div>
   </footer>
 </div>
