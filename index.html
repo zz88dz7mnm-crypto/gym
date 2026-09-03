@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan PPL — Alto Rendimiento</title>
+<meta name="description" content="Plan de entrenamiento Push / Pull / Legs de alto rendimiento con mapa muscular por ejercicio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08080c;
+    --bg-2: #0c0c13;
+    --surface: #111118;
+    --card: #131319;
+    --card-2: #16161f;
+    --border: #23232f;
+    --border-soft: #1b1b25;
+    --accent-push: #e8ff45;
+    --accent-push-dim: #a8c02f;
+    --accent-pull: #45d4ff;
+    --accent-pull-dim: #2f96b8;
+    --accent-legs: #ff5e3a;
+    --accent-legs-dim: #c9482b;
+    --text: #f2f2f7;
+    --muted: #86869c;
+    --muted-2: #55556a;
+    --tag: #1a1a24;
+    --silhouette: #2a2a38;
+    --silhouette-fill: rgba(255,255,255,.035);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -5%, rgba(232,255,69,.05), transparent 60%),
+      radial-gradient(ellipse 900px 600px at 90% 10%, rgba(69,212,255,.05), transparent 60%),
+      radial-gradient(ellipse 900px 700px at 50% 100%, rgba(255,94,58,.04), transparent 60%),
+      var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 0; opacity: 0.45;
+  }
+
+  .wrapper {
+    position: relative; z-index: 1;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 56px 24px 90px;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    margin-bottom: 40px;
+    animation: fadeUp .6s ease both;
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .label {
+    font-size: 11px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .label::before {
+    content: '';
+    width: 18px; height: 1px;
+    background: var(--muted-2);
+    display: inline-block;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 9vw, 100px);
+    line-height: .92;
+    letter-spacing: .015em;
+    color: var(--text);
+  }
+
+  h1 span {
+    display: block;
+    -webkit-text-stroke: 1px var(--muted-2);
+    color: transparent;
+  }
+
+  .tagline {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 13px;
+    font-style: italic;
+    font-weight: 300;
+    max-width: 46ch;
+  }
+
+  .stat-strip {
+    display: flex;
+    gap: 28px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    padding-left: 14px;
+    border-left: 2px solid var(--border);
+  }
+
+  .stat b {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .stat span {
+    font-size: 10.5px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255,255,255,.015);
+    min-width: 190px;
+  }
+
+  .legend-title {
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin-bottom: 2px;
+  }
+
+  .legend-row { display: flex; align-items: center; gap: 8px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .legend-dot.legs { background: var(--accent-legs); box-shadow: 0 0 8px var(--accent-legs); }
+  .legend-dot.push { background: var(--accent-push); box-shadow: 0 0 8px var(--accent-push); }
+  .legend-dot.pull { background: var(--accent-pull); box-shadow: 0 0 8px var(--accent-pull); }
+
+  /* ===== DAY CARD ===== */
+  .day {
+    margin-bottom: 44px;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, var(--card) 0%, var(--card-2) 100%);
+    animation: fadeUp .6s ease both;
+    box-shadow: 0 20px 50px -25px rgba(0,0,0,.6);
+  }
+
+  .day:nth-child(2) { animation-delay: .08s; }
+  .day:nth-child(3) { animation-delay: .16s; }
+  .day:nth-child(4) { animation-delay: .24s; }
+
+  .day-header {
+    padding: 26px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    flex-wrap: wrap;
+  }
+
+  .day-legs .day-header { background: linear-gradient(120deg, rgba(255,94,58,.08), transparent 60%); }
+  .day-push .day-header { background: linear-gradient(120deg, rgba(232,255,69,.07), transparent 60%); }
+  .day-pull .day-header { background: linear-gradient(120deg, rgba(69,212,255,.07), transparent 60%); }
+
+  .day-icon {
+    width: 50px; height: 50px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+  }
+
+  .day-legs .day-icon { background: rgba(255,94,58,.13); border-color: rgba(255,94,58,.25); }
+  .day-push .day-icon { background: rgba(232,255,69,.10); border-color: rgba(232,255,69,.25); }
+  .day-pull .day-icon { background: rgba(69,212,255,.10); border-color: rgba(69,212,255,.25); }
+
+  .day-meta { flex: 1; min-width: 180px; }
+
+  .day-weekday {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11.5px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .day-legs .day-weekday { color: var(--accent-legs); }
+  .day-push .day-weekday { color: var(--accent-push); }
+  .day-pull .day-weekday { color: var(--accent-pull); }
+
+  .day-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: .04em;
+    line-height: 1.05;
+    margin-top: 3px;
+  }
+
+  .day-subtitle {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 5px;
+    max-width: 42ch;
+  }
+
+  .day-map {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .day-map figure { margin: 0; text-align: center; }
+
+  .day-map svg { width: 46px; height: 84px; display: block; }
+
+  .day-map figcaption {
+    font-size: 8.5px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin-top: 3px;
+  }
+
+  /* ===== TABLE ===== */
+  .exercises {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .ex-row {
+    border-bottom: 1px solid var(--border-soft);
+    transition: background .15s;
+  }
+
+  .ex-row:last-child { border-bottom: none; }
+  .ex-row:hover { background: rgba(255,255,255,.022); }
+
+  .ex-row.ab-row .ex-name::before { content: '🔥 '; }
+
+  .ex-num {
+    padding: 16px 4px 16px 26px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--border);
+    width: 34px;
+    vertical-align: middle;
+    user-select: none;
+  }
+
+  .ex-diagram {
+    padding: 12px 6px;
+    vertical-align: middle;
+    width: 54px;
+  }
+
+  .ex-diagram svg { width: 34px; height: 62px; display: block; }
+  .ex-diagram figcaption {
+    display: block;
+    text-align: center;
+    font-size: 7.5px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin-top: 2px;
+  }
+
+  .ex-main {
+    padding: 14px 8px;
+    vertical-align: middle;
+  }
+
+  .ex-name {
+    font-weight: 500;
+    font-size: 13.5px;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .ex-detail {
+    font-size: 11.5px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .ex-muscle {
+    display: inline-block;
+    margin-top: 5px;
+    font-size: 10px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .day-legs .ex-muscle { color: var(--accent-legs); background: rgba(255,94,58,.09); }
+  .day-push .ex-muscle { color: var(--accent-push); background: rgba(232,255,69,.08); }
+  .day-pull .ex-muscle { color: var(--accent-pull); background: rgba(69,212,255,.08); }
+
+  .ex-tags {
+    padding: 14px 26px 14px 8px;
+    vertical-align: middle;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .tag {
+    display: inline-block;
+    background: var(--tag);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-left: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .tag.series {
+    color: var(--text);
+    border-color: #2a2a3a;
+  }
+
+  .day-legs .tag.key { color: var(--accent-legs); border-color: rgba(255,94,58,.3); background: rgba(255,94,58,.06); }
+  .day-push .tag.key { color: var(--accent-push); border-color: rgba(232,255,69,.3); background: rgba(232,255,69,.06); }
+  .day-pull .tag.key { color: var(--accent-pull); border-color: rgba(69,212,255,.3); background: rgba(69,212,255,.06); }
+
+  footer {
+    margin-top: 60px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    animation: fadeUp .6s .4s ease both;
+  }
+
+  footer p + p { margin-top: 6px; color: var(--muted-2); font-size: 10px; text-transform: none; letter-spacing: normal; font-style: italic; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    .day-header { flex-wrap: wrap; }
+    .day-map { width: 100%; justify-content: flex-start; margin-top: 8px; }
+    .ex-diagram { display: none; }
+    .ex-num { padding-left: 18px; }
+    .ex-tags { padding-right: 18px; }
+  }
+
+  @media print {
+    body { background: #fff; color: #000; }
+    body::before { display: none; }
+    .day { border: 1px solid #ccc; break-inside: avoid; box-shadow: none; }
+    .tag { border: 1px solid #ccc; }
+    header h1 { color: #000; }
+    h1 span { -webkit-text-stroke: 1px #999; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ LIBRERÍA SVG DE MÚSCULOS (compartida, no se renderiza directamente) ═══════════ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Silueta corporal base (misma silueta para vista frontal y posterior) -->
+    <g id="body-outline" fill="var(--silhouette-fill)" stroke="var(--silhouette)" stroke-width="1.4">
+      <circle cx="60" cy="20" r="13"/>
+      <rect x="53" y="31" width="14" height="9" rx="3"/>
+      <rect x="36" y="39" width="48" height="58" rx="20"/>
+      <rect x="38" y="94" width="44" height="22" rx="16"/>
+      <rect x="12" y="42" width="18" height="52" rx="9"/>
+      <rect x="90" y="42" width="18" height="52" rx="9"/>
+      <rect x="6" y="92" width="15" height="46" rx="7"/>
+      <rect x="99" y="92" width="15" height="46" rx="7"/>
+      <rect x="40" y="116" width="20" height="58" rx="10"/>
+      <rect x="60" y="116" width="20" height="58" rx="10"/>
+      <rect x="42" y="176" width="16" height="44" rx="8"/>
+      <rect x="62" y="176" width="16" height="44" rx="8"/>
+    </g>
+
+    <!-- Grupos musculares resaltables -->
+    <g id="m-chest"><ellipse cx="48" cy="52" rx="11" ry="9"/><ellipse cx="72" cy="52" rx="11" ry="9"/></g>
+    <g id="m-frontdelts"><circle cx="21" cy="46" r="9"/><circle cx="99" cy="46" r="9"/></g>
+    <g id="m-sidedelts"><ellipse cx="18" cy="50" rx="8" ry="12"/><ellipse cx="102" cy="50" rx="8" ry="12"/></g>
+    <g id="m-biceps"><ellipse cx="21" cy="63" rx="7.5" ry="17"/><ellipse cx="99" cy="63" rx="7.5" ry="17"/></g>
+    <g id="m-triceps"><ellipse cx="21" cy="63" rx="7.5" ry="17"/><ellipse cx="99" cy="63" rx="7.5" ry="17"/></g>
+    <g id="m-abs"><rect x="46" y="67" width="28" height="27" rx="8"/></g>
+    <g id="m-obliques"><rect x="37" y="70" width="10" height="22" rx="5"/><rect x="73" y="70" width="10" height="22" rx="5"/></g>
+    <g id="m-adductors"><rect x="54" y="118" width="12" height="42" rx="6"/></g>
+    <g id="m-quads"><rect x="42" y="120" width="16" height="48" rx="8"/><rect x="62" y="120" width="16" height="48" rx="8"/></g>
+    <g id="m-hamstrings"><rect x="42" y="122" width="16" height="46" rx="8"/><rect x="62" y="122" width="16" height="46" rx="8"/></g>
+    <g id="m-glutes"><rect x="40" y="96" width="40" height="20" rx="14"/></g>
+    <g id="m-calves"><rect x="43" y="180" width="14" height="36" rx="7"/><rect x="63" y="180" width="14" height="36" rx="7"/></g>
+    <g id="m-lats"><rect x="33" y="48" width="14" height="40" rx="7"/><rect x="73" y="48" width="14" height="40" rx="7"/></g>
+    <g id="m-traps"><path d="M44 36 L76 36 L88 50 L32 50 Z"/></g>
+  </defs>
+</svg>
+
+<div class="wrapper">
+
+  <header>
+    <div class="header-top">
+      <div>
+        <p class="label">Programa de entrenamiento — PPL</p>
+        <h1>PUSH<br>PULL<br><span>LEGS</span></h1>
+        <p class="tagline">Alto Rendimiento · Martes / Miércoles / Jueves · Cada ejercicio incluye su mapa muscular objetivo.</p>
+        <div class="stat-strip">
+          <div class="stat"><b>3</b><span>Días / semana</span></div>
+          <div class="stat"><b>23</b><span>Ejercicios totales</span></div>
+          <div class="stat"><b>15</b><span>Grupos musculares</span></div>
+        </div>
+      </div>
+      <div class="legend">
+        <span class="legend-title">Días</span>
+        <div class="legend-row"><span class="legend-dot legs"></span> Martes — Piernas + Abdomen</div>
+        <div class="legend-row"><span class="legend-dot push"></span> Miércoles — Empuje (Push)</div>
+        <div class="legend-row"><span class="legend-dot pull"></span> Jueves — Tracción (Pull)</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════ MARTES: PIERNAS ═══════════ -->
+  <div class="day day-legs">
+    <div class="day-header">
+      <div class="day-icon">🦵</div>
+      <div class="day-meta">
+        <div class="day-weekday">Martes</div>
+        <div class="day-title">PIERNAS + ABDOMEN</div>
+        <div class="day-subtitle">Enfoque Base Estructural · El grupo muscular de mayor demanda energética</div>
+      </div>
+      <div class="day-map">
+        <figure>
+          <svg viewBox="0 0 120 220" class="legs">
+            <use href="#body-outline"/>
+            <use href="#m-quads" fill="var(--accent-legs)" opacity=".9"/>
+            <use href="#m-adductors" fill="var(--accent-legs)" opacity=".55"/>
+            <use href="#m-abs" fill="var(--accent-legs)" opacity=".55"/>
+            <use href="#m-obliques" fill="var(--accent-legs)" opacity=".55"/>
+          </svg>
+          <figcaption>Frontal</figcaption>
+        </figure>
+        <figure>
+          <svg viewBox="0 0 120 220" class="legs">
+            <use href="#body-outline"/>
+            <use href="#m-hamstrings" fill="var(--accent-legs)" opacity=".9"/>
+            <use href="#m-calves" fill="var(--accent-legs)" opacity=".75"/>
+            <use href="#m-glutes" fill="var(--accent-legs)" opacity=".5"/>
+          </svg>
+          <figcaption>Posterior</figcaption>
+        </figure>
+      </div>
+    </div>
+    <table class="exercises">
+      <tr class="ex-row">
+        <td class="ex-num">01</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-quads" fill="var(--accent-legs)"/></svg>
+          <figcaption>Cuádriceps</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Sentadilla profunda (Barra libre o Smith)</div>
+          <div class="ex-detail">Cuádriceps y glúteo · RIR 2</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">4 × 6-8</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">02</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-quads" fill="var(--accent-legs)"/></svg>
+          <figcaption>Cuádriceps</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Prensa a 90° (Pies intermedios/bajos)</div>
+          <div class="ex-detail">Volumen puro · RIR 1-2</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">4 × 10-12</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">03</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-hamstrings" fill="var(--accent-legs)"/></svg>
+          <figcaption>Isquios</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Curl femoral acostado o sentado (Camilla de Isquios)</div>
+          <div class="ex-detail">Estímulo directo posterior · RIR 1</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">4 × 10-12</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">04</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-quads" fill="var(--accent-legs)"/></svg>
+          <figcaption>Cuádriceps</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Extensión de cuádriceps (Camilla de Cuádriceps)</div>
+          <div class="ex-detail">Aislamiento cuádriceps · RIR 1</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">4 × 10-12</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">05</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-adductors" fill="var(--accent-legs)"/></svg>
+          <figcaption>Aductores</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Máquina de Aductores (Cerrar piernas)</div>
+          <div class="ex-detail">Grosor interno · RIR 0-1</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">3 × 12-15</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">06</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-calves" fill="var(--accent-legs)"/></svg>
+          <figcaption>Gemelos</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Gemelos de pie (Máquina o Multipower)</div>
+          <div class="ex-detail">Fallo técnico · Pausa 1 seg abajo en máximo estiramiento · RIR 0</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">4 × 12-15</span>
+        </td>
+      </tr>
+      <tr class="ex-row ab-row">
+        <td class="ex-num">07</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-abs" fill="var(--accent-legs)"/></svg>
+          <figcaption>Abdomen</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Abdomen — Crunch en polea alta con soga y carga</div>
+          <div class="ex-detail">Flexionar columna con el peso, no mover la cadera · RIR 1</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag key">ABS</span>
+          <span class="tag series">4 × 12-15</span>
+        </td>
+      </tr>
+      <tr class="ex-row ab-row">
+        <td class="ex-num">08</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-obliques" fill="var(--accent-legs)"/></svg>
+          <figcaption>Oblicuos</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Abdomen — Russian Twist</div>
+          <div class="ex-detail">Rotación de torso · Core oblicuo</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag key">ABS</span>
+          <span class="tag series">3 × 24</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ═══════════ MIÉRCOLES: EMPUJE ═══════════ -->
+  <div class="day day-push">
+    <div class="day-header">
+      <div class="day-icon">💪</div>
+      <div class="day-meta">
+        <div class="day-weekday">Miércoles</div>
+        <div class="day-title">EMPUJE (PUSH)</div>
+        <div class="day-subtitle">Máxima Prioridad — Pecho · Hombro Lateral · Tríceps</div>
+      </div>
+      <div class="day-map">
+        <figure>
+          <svg viewBox="0 0 120 220">
+            <use href="#body-outline"/>
+            <use href="#m-chest" fill="var(--accent-push)" opacity=".9"/>
+            <use href="#m-frontdelts" fill="var(--accent-push)" opacity=".7"/>
+            <use href="#m-sidedelts" fill="var(--accent-push)" opacity=".55"/>
+          </svg>
+          <figcaption>Frontal</figcaption>
+        </figure>
+        <figure>
+          <svg viewBox="0 0 120 220">
+            <use href="#body-outline"/>
+            <use href="#m-triceps" fill="var(--accent-push)" opacity=".9"/>
+          </svg>
+          <figcaption>Posterior</figcaption>
+        </figure>
+      </div>
+    </div>
+    <table class="exercises">
+      <tr class="ex-row">
+        <td class="ex-num">01</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-chest" fill="var(--accent-push)"/></svg>
+          <figcaption>Pecho sup.</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Press Inclinado con mancuernas</div>
+          <div class="ex-detail">Pecho Superior · RIR 1-2</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">4 × 8-10</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">02</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-chest" fill="var(--accent-push)"/></svg>
+          <figcaption>Pecho</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Press de Banca plano (Barra o Máquina convergente)</div>
+          <div class="ex-detail">Pecho Plano · Volumen e hipertrofia general · RIR 1-2</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">4 × 10</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">03</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-chest" fill="var(--accent-push)"/></svg>
+          <figcaption>Pecho int.</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Cruces en polea baja (Cables hacia arriba y adentro)</div>
+          <div class="ex-detail">Pecho Aislamiento · Línea interna y porción superior · RIR 1</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">3 × 12</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">04</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-sidedelts" fill="var(--accent-push)"/></svg>
+          <figcaption>Hombro lat.</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Vuelos laterales con mancuernas</div>
+          <div class="ex-detail">Hombro Lateral · Aspecto en "V" que resalta el pecho · RIR 0-1</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag key">CLAVE</span>
+          <span class="tag series">4 × 12-15</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">05</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-frontdelts" fill="var(--accent-push)"/></svg>
+          <figcaption>Hombro ant.</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Press Militar (Barra o Mancuernas)</div>
+          <div class="ex-detail">Hombro — Cabeza anterior · Fuerza del deltoides · RIR 1-2</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">3 × 6-10</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">06</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-triceps" fill="var(--accent-push)"/></svg>
+          <figcaption>Tríceps</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Press Francés con barra Z (ligeramente tras la cabeza)</div>
+          <div class="ex-detail">Tríceps Pesado · Cabeza larga del tríceps · RIR 1</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">4 × 10</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">07</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-triceps" fill="var(--accent-push)"/></svg>
+          <figcaption>Tríceps</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Fondos (Dips)</div>
+          <div class="ex-detail">Tríceps · Carga corporal · Énfasis en la cabeza lateral</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">3 × 10</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">08</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-triceps" fill="var(--accent-push)"/></svg>
+          <figcaption>Tríceps</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Extensiones en polea alta con soga</div>
+          <div class="ex-detail">Tríceps Aislamiento · Bombear y agotar al fallo · RIR 0</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">3 × 12</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ═══════════ JUEVES: TRACCIÓN ═══════════ -->
+  <div class="day day-pull">
+    <div class="day-header">
+      <div class="day-icon">🔙</div>
+      <div class="day-meta">
+        <div class="day-weekday">Jueves</div>
+        <div class="day-title">TRACCIÓN (PULL) + ABDOMEN</div>
+        <div class="day-subtitle">Espalda Completa · Bíceps Prioridad · Intercalado para maximizar fuerza</div>
+      </div>
+      <div class="day-map">
+        <figure>
+          <svg viewBox="0 0 120 220">
+            <use href="#body-outline"/>
+            <use href="#m-biceps" fill="var(--accent-pull)" opacity=".9"/>
+            <use href="#m-abs" fill="var(--accent-pull)" opacity=".5"/>
+          </svg>
+          <figcaption>Frontal</figcaption>
+        </figure>
+        <figure>
+          <svg viewBox="0 0 120 220">
+            <use href="#body-outline"/>
+            <use href="#m-lats" fill="var(--accent-pull)" opacity=".9"/>
+            <use href="#m-traps" fill="var(--accent-pull)" opacity=".7"/>
+          </svg>
+          <figcaption>Posterior</figcaption>
+        </figure>
+      </div>
+    </div>
+    <table class="exercises">
+      <tr class="ex-row">
+        <td class="ex-num">01</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-lats" fill="var(--accent-pull)"/></svg>
+          <figcaption>Dorsal ancho</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Jalón al pecho (Agarre prono, ancho intermedio)</div>
+          <div class="ex-detail">Espalda — Ancho · Dorsal ancho · RIR 1-2</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">4 × 10</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">02</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-traps" fill="var(--accent-pull)"/></svg>
+          <figcaption>Espalda media</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Remo sentado en polea (Agarre cerrado/neutro) o Remo con barra</div>
+          <div class="ex-detail">Espalda — Densidad · Zona media, trapecios y romboides · RIR 1-2</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">4 × 10-12</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">03</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-biceps" fill="var(--accent-pull)"/></svg>
+          <figcaption>Bíceps corto</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Curl en Banco Scott (Predicador) con barra Z</div>
+          <div class="ex-detail">Bíceps — Cabeza Corta · Aislamiento puro · Da "pico" · RIR 1</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag key">💪</span>
+          <span class="tag series">4 × 10</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">04</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-lats" fill="var(--accent-pull)"/></svg>
+          <figcaption>Dorsal estir.</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Pullover en polea alta (con soga o barra recta)</div>
+          <div class="ex-detail">Espalda — Estiramiento · Estiramiento brutal del dorsal bajo fatiga · RIR 1</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag series">3 × 12-15</span>
+        </td>
+      </tr>
+      <tr class="ex-row">
+        <td class="ex-num">05</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-biceps" fill="var(--accent-pull)"/></svg>
+          <figcaption>Braquial</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Curl Martillo alterno con mancuernas</div>
+          <div class="ex-detail">Bíceps — Grosor · Braquiorradial y braquial anterior · RIR 1</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag key">💪</span>
+          <span class="tag series">4 × 10-12</span>
+        </td>
+      </tr>
+      <tr class="ex-row ab-row">
+        <td class="ex-num">06</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-abs" fill="var(--accent-pull)"/></svg>
+          <figcaption>Abdomen inf.</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Abdomen — Elevaciones de piernas colgado en barra</div>
+          <div class="ex-detail">Al fallo técnico · Apuntar a 10-15 limpias · Porción inferior del abdomen</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag key">ABS</span>
+          <span class="tag series">4 × fallo</span>
+        </td>
+      </tr>
+      <tr class="ex-row ab-row">
+        <td class="ex-num">07</td>
+        <td class="ex-diagram">
+          <svg viewBox="0 0 120 220"><use href="#body-outline"/><use href="#m-abs" fill="var(--accent-pull)"/></svg>
+          <figcaption>Core</figcaption>
+        </td>
+        <td class="ex-main">
+          <div class="ex-name">Abdomen — Bicho Bolita</div>
+          <div class="ex-detail">Contracción abdominal total · Core completo</div>
+        </td>
+        <td class="ex-tags">
+          <span class="tag key">ABS</span>
+          <span class="tag series">3 × 12</span>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <footer>
+    <p>Plan PPL · Alto Rendimiento · Mar / Mié / Jue &nbsp;·&nbsp; RIR = Repeticiones en Reserva</p>
+    <p>Los mapas musculares son ilustrativos y simplificados, orientados a identificar el músculo objetivo principal de cada ejercicio.</p>
+  </footer>
+
+</div>
+</body>
+</html>
