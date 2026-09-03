@@ -3,7 +3,9 @@
 Página estática con el plan **Push / Pull / Legs** (Martes / Miércoles / Jueves).
 23 ejercicios, cada uno con:
 
-- **Foto real de ejecución** (posición inicial → final: pasá el cursor o tocá la foto).
+- **Foto real de ejecución**: posición inicial → final. En escritorio con el cursor;
+  en el móvil tocando la foto o deslizando sobre ella (el botón indica en cuál de las
+  dos posiciones estás).
 - **Lámina anatómica** con el músculo objetivo resaltado en rojo (vista frontal o posterior).
 - Series × repeticiones, RIR y la indicación técnica clave.
 
