@@ -60,3 +60,7 @@ Referencia de superposiciones anatómicas (`assets/anatomy/`):
 
 Los SVG anatómicos se normalizaron con `viewBox` común (`0 0 200 369`) para poder
 superponer base y músculo a cualquier tamaño.
+
+## PyOS
+
+IDE de Python que corre en el navegador (Pyodide), con tema oscuro estilo PyCharm/Darcula, resaltado de sintaxis, archivos, consola y REPL: [`pyos/`](pyos/index.html)
